@@ -49,6 +49,14 @@ Direct template (skip prompts):
 npm create solana-dapp@latest -t gh:solana-foundation/templates/mobile/solana-mobile-expo-template
 ```
 
+Or via Expo CLI:
+
+```bash
+npx create-expo-app --template @solana-mobile/solana-mobile-expo-template
+```
+
+Three paths reach the same place. `create-solana-dapp` = discoverable picker. `-t gh:...` = scripted. `create-expo-app` = direct when you know the template.
+
 ## Config
 
 - `app.json` → `expo.android.package` = final reverse-DNS id. Must match dApp Store entry.
@@ -65,14 +73,24 @@ npx expo run:android
 
 ## Polyfill (critical)
 
-`react-native-get-random-values` **MUST be the very first import** in app entry. Other modules check `crypto` on import — wrong order = silent tx failures.
+A crypto polyfill **MUST be the very first import** in app entry. Other modules check `crypto` on import — wrong order = silent tx failures.
+
+Pick one:
+- `react-native-get-random-values` (canonical; what the `mwa-setup` skill installs)
+- `expo-crypto`'s `getRandomValues` via `src/polyfills.ts` (default in some Solana Mobile Expo templates)
 
 Expo Router (`app/_layout.tsx`):
 
 ```ts
 import 'react-native-get-random-values';  // FIRST
 import { Stack } from 'expo-router';
-// ...
+```
+
+React Navigation (`index.tsx`):
+
+```ts
+import 'react-native-get-random-values';  // FIRST
+import { registerRootComponent } from 'expo';
 ```
 
 ## SDK choice
