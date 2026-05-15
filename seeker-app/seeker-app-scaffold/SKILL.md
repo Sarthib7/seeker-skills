@@ -36,26 +36,19 @@ brew install android-platform-tools
 
 ## Scaffold
 
+Three equivalent paths:
+
+| Path | When |
+|------|------|
+| `npm create solana-dapp@latest` | Discoverable picker (Category: Mobile → Template: `solana-mobile-expo-template`) |
+| `npm create solana-dapp@latest -t gh:solana-foundation/templates/mobile/solana-mobile-expo-template` | Scripted (skip prompts) |
+| `npx create-expo-app --template @solana-mobile/solana-mobile-expo-template` | Direct (know the template) |
+
+Then:
+
 ```bash
-npm create solana-dapp@latest
-# Category: Mobile
-# Template: solana-mobile-expo-template (or other Expo RN template)
 cd <name> && npm install && npm run android
 ```
-
-Direct template (skip prompts):
-
-```bash
-npm create solana-dapp@latest -t gh:solana-foundation/templates/mobile/solana-mobile-expo-template
-```
-
-Or via Expo CLI:
-
-```bash
-npx create-expo-app --template @solana-mobile/solana-mobile-expo-template
-```
-
-Three paths reach the same place. `create-solana-dapp` = discoverable picker. `-t gh:...` = scripted. `create-expo-app` = direct when you know the template.
 
 ## Config
 
