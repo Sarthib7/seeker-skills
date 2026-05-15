@@ -26,9 +26,15 @@ brew install android-platform-tools
 
 ```bash
 npm create solana-dapp@latest
-# Framework: Solana Mobile
-# Template: Expo RN
+# Category: Mobile
+# Template: solana-mobile-expo-template (or other Expo RN template)
 cd <name> && npm install && npm run android
+```
+
+Direct template (skip prompts):
+
+```bash
+npm create solana-dapp@latest -t gh:solana-foundation/templates/mobile/solana-mobile-expo-template
 ```
 
 ## Config
