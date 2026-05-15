@@ -5,14 +5,18 @@ description: Solana Mobile Seed Vault SDK for native Android wallet apps. **Wall
 
 # Seed Vault
 
-## Audience check
+## Use
 
-| Building | Use |
-|----------|-----|
-| Wallet app (manages seeds) | This skill |
-| dApp (uses user's wallet) | **STOP.** Use MWA from `solana-mobile/solana-mobile-dev-skill` |
+- Building an Android wallet app (manages seeds, signs for the user)
+- Implementing the Seed Vault Wallet API
+- Targeting Seeker's secure element
 
-Misrouting = #1 mistake. Confirm before generating code.
+## Not
+
+- Building a **dApp** → use MWA from `solana-mobile/solana-mobile-dev-skill`. The user's wallet talks to Seed Vault; your dApp talks to the wallet via MWA.
+- React Native app → no first-party RN bridge. Use MWA.
+
+Misrouting = #1 mistake. Confirm audience before generating code.
 
 ## What
 

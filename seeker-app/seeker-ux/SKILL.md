@@ -5,6 +5,18 @@ description: Seeker UX conventions for RN dApps. Triggers - "Seeker UX", "add ha
 
 # Seeker UX
 
+## Use
+
+- App runs, UX needs Seeker polish
+- Add haptics / approval flow / 120 Hz animations
+- Brand palette, safe area, tap targets
+
+## Not
+
+- App doesn't run → `seeker-app-scaffold` first
+- iOS UX → these conventions are Seeker (Android, AMOLED, 120 Hz)
+- Generic web design → use a frontend skill
+
 ## One-tap approve
 
 Wallet biometric = only confirmation. No `Alert.alert("Are you sure?")` before `transact()`. Long-press confirm OK for destructive only.

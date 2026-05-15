@@ -5,6 +5,17 @@ description: Router for building a Solana Mobile (Seeker) dApp end-to-end. Trigg
 
 # Seeker App Builder
 
+## Use
+
+- "build a Seeker app" / "ship to dApp Store" / "start Solana Mobile project"
+- Multi-phase work: scaffold → MWA → tx → UX → publish
+
+## Not
+
+- Single phase → call the sub-skill directly
+- Debugging an existing app → jump to the specific skill
+- Wallet app (manages seeds) → `seed-vault`
+
 ## Route
 
 | State | Sub-skill |

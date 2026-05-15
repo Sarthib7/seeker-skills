@@ -5,6 +5,18 @@ description: Scaffold Solana Mobile RN app. Triggers - "create Solana Mobile app
 
 # Seeker App Scaffold
 
+## Use
+
+- No `package.json` yet, or only CLAUDE.md + git
+- "create Solana Mobile app" / "start Seeker dApp" / "solana.new"
+- Android toolchain setup (JDK 17, `adb`, `ANDROID_HOME`)
+
+## Not
+
+- Project scaffolded → `mwa-setup` (from `solana-mobile/solana-mobile-dev-skill`)
+- iOS-only → Solana Mobile = Android
+- Web app → `gh:solana-foundation/templates/kit/nextjs` instead
+
 ## Prereq
 
 ```bash

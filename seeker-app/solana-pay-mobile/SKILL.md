@@ -5,6 +5,19 @@ description: SOL/USDC transfers in RN signed via MWA. Triggers - "add USDC payme
 
 # Solana Pay (Mobile)
 
+## Use
+
+- Move SOL or USDC from the app
+- Generate or consume a Solana Pay URL / QR
+- Checkout, tip, send, or payment flow
+
+## Not
+
+- MWA not wired → `mwa-setup` first
+- Swap UX → Jupiter / DFlow / Orca skills
+- NFT mint → Metaplex skill
+- Web app → use `@solana/pay` directly (RN can't)
+
 ## Prereq
 
 MWA setup done via `mwa-setup` from `solana-mobile/solana-mobile-dev-skill`: `@wallet-ui/react-native-web3js`, `react-native-get-random-values` polyfill first import, `MobileWalletProvider` wired. If not → do that first.

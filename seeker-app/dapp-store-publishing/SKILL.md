@@ -5,6 +5,19 @@ description: Build/sign/publish Solana dApp Store releases. Triggers - "publish 
 
 # dApp Store Publishing
 
+## Use
+
+- App built + tested, ready to ship
+- First release or shipping an update
+- Need to sign an APK for distribution
+
+## Not
+
+- App not built → `seeker-app-scaffold` first
+- No publisher account → register at publish.solanamobile.com first (mints App NFT)
+- `.aab` submission → unsupported. Use `assembleRelease`, not `bundleRelease`
+- Google Play → different store, different signing key
+
 ## One-time setup
 
 ### Publisher + App NFT
