@@ -52,8 +52,18 @@ Pure `#000` only. Never `#111`.
 ## 120 Hz
 
 - Animate `transform` + `opacity`. Never `width/height/top`.
-- `react-native-reanimated` v3 worklets. Never legacy `Animated`.
-- Easing: `cubic-bezier(0.4, 0, 0.2, 1)`.
+- `react-native-reanimated@4` (current). Needs companion dep `react-native-worklets`.
+- Requires **New Architecture (Fabric)** — default in recent Expo SDKs.
+- Stuck on Old Arch? Use `react-native-reanimated@3` (`reanimated-3` npm tag).
+- Easing: `cubic-bezier(0.4, 0, 0.2, 1)`. Use `useAnimatedStyle` worklets. Never legacy `Animated`.
+
+Install (Expo):
+
+```bash
+npx expo install react-native-reanimated react-native-worklets
+```
+
+Expo SDK 50+ ships the Worklets Babel plugin by default. Bare RN must add `react-native-worklets/plugin` to `babel.config.js`.
 
 ## RN pitfalls
 

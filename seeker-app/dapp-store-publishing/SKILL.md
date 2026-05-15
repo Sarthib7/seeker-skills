@@ -61,8 +61,7 @@ android {
   buildTypes {
     release {
       signingConfig signingConfigs.dappStore
-      minifyEnabled true
-      shrinkResources true
+      // minifyEnabled false  // see Pitfalls before enabling
     }
   }
 }
@@ -121,6 +120,9 @@ Same command. Portal matches by package name. **Bump `versionCode`** every relea
 | Wrong signing key on update | Keep keystore safe forever. No recovery. |
 | `versionCode` not bumped | Bump in `build.gradle` |
 | Publisher wallet drained | Top up to ~0.2 SOL |
+| `minifyEnabled true` breaks MWA / reflective native modules in release | Default to `false`. If enabling, add `-keep` rules in `proguard-rules.pro` for `com.solana.mobilewalletadapter.**`, `com.solanamobile.**`, and any other reflective deps. Test release build before submission. |
+| App crashes on launch only in release | Almost always missing ProGuard rules. Disable `minifyEnabled` to confirm. |
+| Package name mismatch between APK + portal | The portal infers app identity from APK package name; must match the `expo.android.package` set at scaffold. |
 
 ## Refs
 
