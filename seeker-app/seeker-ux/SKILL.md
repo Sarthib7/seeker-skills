@@ -55,12 +55,20 @@ Pure `#000` only. Never `#111`.
 - `react-native-reanimated` v3 worklets. Never legacy `Animated`.
 - Easing: `cubic-bezier(0.4, 0, 0.2, 1)`.
 
+## RN pitfalls
+
+- `account.address.toString()` only. Bare `{account.address}` = garbled text in `<Text>`.
+- No `Buffer` in RN. Use `btoa(String.fromCharCode(...arr))` for base64.
+- Polyfill `react-native-get-random-values` = first import in entry file. Wrong order → silent tx failures.
+
 ## Security floor
 
 - No keys/mnemonics in app code or env.
-- Sign only via MWA `transact()`.
+- Sign only via MWA (`useMobileWallet` hook or raw `transact()`).
+- Privacy policy required for dApp Store. Reuse from web if shared.
 
 ## Refs
 
 - docs.solanamobile.com
+- github.com/solana-mobile/solana-mobile-dev-skill
 - github.com/solana-mobile/mobile-wallet-adapter

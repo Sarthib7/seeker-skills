@@ -51,6 +51,46 @@ npx expo prebuild --platform android --clean
 npx expo run:android
 ```
 
+## Polyfill (critical)
+
+`react-native-get-random-values` **MUST be the very first import** in app entry. Other modules check `crypto` on import — wrong order = silent tx failures.
+
+Expo Router (`app/_layout.tsx`):
+
+```ts
+import 'react-native-get-random-values';  // FIRST
+import { Stack } from 'expo-router';
+// ...
+```
+
+## SDK choice
+
+`@wallet-ui/react-native-web3js` (Beeman's Wallet UI SDK) = official recommendation. Provides `useMobileWallet` hook + `MobileWalletProvider`. Wraps the raw `@solana-mobile/mobile-wallet-adapter-protocol-web3js`.
+
+```bash
+npm install @wallet-ui/react-native-web3js @solana/web3.js @tanstack/react-query react-native-get-random-values
+```
+
+## Constants
+
+`constants/wallet.ts`:
+
+```ts
+import type { Chain } from '@solana-mobile/mobile-wallet-adapter-protocol';
+
+export const APP_IDENTITY = {
+  name: '<Your App>',
+  uri: 'https://yourapp.com',
+  icon: 'favicon.ico',
+};
+
+export const SOLANA_CLUSTER = (process.env.EXPO_PUBLIC_SOLANA_CLUSTER || 'devnet') as 'devnet' | 'testnet' | 'mainnet-beta';
+export const SOLANA_CHAIN: Chain = `solana:${SOLANA_CLUSTER}`;
+export const SOLANA_RPC_ENDPOINT = process.env.EXPO_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.devnet.solana.com';
+```
+
+`SOLANA_CHAIN` uses CAIP-2 format. MWA requires this exact shape.
+
 ## Pitfalls
 
 | Error | Fix |
@@ -58,6 +98,8 @@ npx expo run:android
 | `SDK location not found` | Set `ANDROID_HOME`; `android/local.properties` with `sdk.dir=...` |
 | `Unable to locate a Java Runtime` | JDK 17 + `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` |
 | MWA error in Expo Go | Use dev client, not Go |
+| `Secure context (https)` error from MWA | `rm -rf node_modules/@solana-mobile/mobile-wallet-adapter-protocol/lib/esm` then rebuild |
+| Silent tx failures, `crypto.getRandomValues` not found | Polyfill not first import (see above) |
 
 ## Refs
 

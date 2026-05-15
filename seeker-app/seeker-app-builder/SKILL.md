@@ -10,19 +10,21 @@ description: Router for building a Solana Mobile (Seeker) dApp end-to-end. Trigg
 | State | Sub-skill |
 |-------|-----------|
 | No project | `seeker-app-scaffold` |
-| No wallet | `@solana-mobile/mobile-wallet-adapter` (from `solana-mobile/solana-mobile-dev-skill`) |
-| No on-chain action | `solana-pay-mobile` |
+| No wallet | `mwa-setup` → `mwa-connection` (from `solana-mobile/solana-mobile-dev-skill`) — uses `@wallet-ui/react-native-web3js` |
+| Need Seeker-owner gating | `genesis-token` (same repo) — SIWS + SGT check |
+| Need `.skr` name resolution | `skr-address-resolution` (same repo) |
+| No on-chain action | `mwa-transactions` (SOL) or `solana-pay-mobile` (USDC) |
 | Untuned UX | `seeker-ux` |
 | Ready to ship | `dapp-store-publishing` |
 | Building a wallet (not dApp) | `seed-vault` |
 
 ## Order
 
-scaffold → MWA → tx action → UX → publish.
+scaffold → MWA setup → connection → tx action → UX → publish.
 
 ## Companion (external)
 
-MWA, `.skr` resolution, Genesis Token: `solana-mobile/solana-mobile-dev-skill`.
+`solana-mobile/solana-mobile-dev-skill` — official MWA skills (setup/connection/transactions), Genesis Token gating, `.skr` resolution.
 
 ## Constraints
 

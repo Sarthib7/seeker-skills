@@ -7,7 +7,7 @@ description: SOL/USDC transfers in RN signed via MWA. Triggers - "add USDC payme
 
 ## Prereq
 
-MWA setup done. If not → `mwa-setup` from `solana-mobile/solana-mobile-dev-skill`.
+MWA setup done via `mwa-setup` from `solana-mobile/solana-mobile-dev-skill`: `@wallet-ui/react-native-web3js`, `react-native-get-random-values` polyfill first import, `MobileWalletProvider` wired. If not → do that first.
 
 ## Mints
 
@@ -16,7 +16,7 @@ MWA setup done. If not → `mwa-setup` from `solana-mobile/solana-mobile-dev-ski
 | USDC | `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` | `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU` |
 | SOL | native | native |
 
-Always from constants file. Never inline.
+`constants/wallet.ts` only. Never inline.
 
 ## Build tx
 
@@ -44,22 +44,53 @@ const usdcIx = createTransferCheckedInstruction(
 );
 ```
 
-Recipient ATA may not exist? Prepend `createAssociatedTokenAccountIdempotentInstruction`. **Batch into same tx** (Seeker = one approval).
+Recipient ATA may not exist? Prepend `createAssociatedTokenAccountIdempotentInstruction`. **Batch into one tx** (Seeker = one approval).
 
-## Sign via MWA
+## Sign + send (hook path, preferred)
+
+Use `useMobileWallet` from `@wallet-ui/react-native-web3js`:
+
+```ts
+import { useMobileWallet } from '@wallet-ui/react-native-web3js';
+import { Transaction } from '@solana/web3.js';
+
+function PayButton() {
+  const { account, connection, signAndSendTransaction } = useMobileWallet();
+
+  const pay = async () => {
+    if (!account) return;
+    const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+    const tx = new Transaction({
+      feePayer: account.address,
+      blockhash,
+      lastValidBlockHeight,
+    }).add(usdcIx);
+
+    const sig = await signAndSendTransaction(tx);  // returns string
+    await connection.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight });
+    return sig;
+  };
+}
+```
+
+- `account.address` = `PublicKey`. Display: `account.address.toString()`.
+- `connection` from the hook. Don't `new Connection()`.
+- `signAndSendTransaction(tx)` = singular, returns `string`.
+
+## Raw API (advanced)
+
+Skip the hook for SIWS or remote scenarios:
 
 ```ts
 import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 
-const sig = await transact(async (wallet) => {
-  const { blockhash } = await connection.getLatestBlockhash();
-  const tx = new Transaction({ feePayer: payer, recentBlockhash: blockhash }).add(usdcIx);
-  const [sent] = await wallet.signAndSendTransactions({ transactions: [tx] });
-  return sent;
+const [sig] = await transact(async (wallet) => {
+  await wallet.authorize({ cluster: 'solana:mainnet', identity: APP_IDENTITY });
+  return wallet.signAndSendTransactions({ transactions: [tx] });
 });
 ```
 
-`signAndSendTransactions` = one tap. `signTransactions` only if inspecting before broadcast.
+Raw `signAndSendTransactions` = plural, returns `string[]`.
 
 ## Solana Pay URL
 
@@ -67,21 +98,21 @@ const sig = await transact(async (wallet) => {
 solana:<recipient>?amount=<n>&spl-token=<mint>&reference=<pubkey>&label=<>&message=<>
 ```
 
-- `amount` in UI units (`10.50`), not lamports.
+- `amount` UI units (`10.50`), not lamports.
 - `reference` = throwaway pubkey for tx lookup.
 - `encodeURIComponent` label/message.
 
 Incoming: parse → build tx → MWA sign.
 
-## Confirm
+## Pitfalls
 
-```ts
-await connection.confirmTransaction(
-  { signature: sig, blockhash, lastValidBlockHeight }, 'confirmed',
-);
-```
-
-Trigger `Notification.Success/Error` haptic.
+| Issue | Fix |
+|-------|-----|
+| Garbled address text | `account.address.toString()`, never `{account.address}` directly |
+| `Buffer doesn't exist` in RN | `btoa(String.fromCharCode(...uint8Array))` instead of `Buffer.from(...).toString('base64')` |
+| Tx fails to unfunded recipient | Some wallets reject. Test with known funded addresses first. |
+| Blockhash expired | Fresh blockhash per tx. Rebuild on retry. |
+| Multi-tx UX | Batch ixs into one Transaction. Never chain `signAndSendTransaction` calls. |
 
 ## RPC
 
@@ -90,4 +121,5 @@ Never ship public RPC for mainnet. Use Helius/QuickNode/Triton via backend-issue
 ## Refs
 
 - docs.solanapay.com
+- github.com/solana-mobile/solana-mobile-dev-skill (mwa-transactions)
 - github.com/solana-mobile/mobile-wallet-adapter
